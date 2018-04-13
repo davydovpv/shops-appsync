@@ -1,9 +1,27 @@
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
-import { StackNavigator } from 'react-navigation'
+import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 
 import Home from '../src/components/Home'
 import Login from '../src/components/user/Login'
+import Register from '../src/components/user/Register'
+
+const UserActionTab = TabNavigator({
+  Login: {
+    screen: Login,
+    navigationOptions: {
+      title: "Sign In"
+    }
+  },
+  Register: {
+    screen: Register,
+    navigationOptions: {
+      title: "Sign Up"
+    }
+  }
+}, {
+  // tabBarPosition: 'top'
+})
 
 const Navigator = StackNavigator({
   Home: {
@@ -11,12 +29,28 @@ const Navigator = StackNavigator({
   }
 })
 
-const NavWrapper = () => {
-  //check if user exist here
-  // if(loading) return <ActivityIndicator size="large" />
-  // if(!user) return <Login />
-  // return <Navigator screenProps={{user}} />
-  return <Navigator />
+class NavWrapper extends React.Component{
+  state = {
+    isAuthenticated: false
+  }
+
+  authenticate = (isAuthenticated) => {
+    this.setState({
+      isAuthenticated
+    })
+  }
+
+  render() {
+    //check if user exist here
+    // if(loading) return <ActivityIndicator size="large" />
+    // if(!user) return <Login />
+    // return <Navigator screenProps={{user}} />
+    if(this.state.isAuthenticated) return <Navigator />
+
+    return <UserActionTab screenProps={{
+      authenticate: this.authenticate
+    }} />
+  }
 }
 
 export default NavWrapper
