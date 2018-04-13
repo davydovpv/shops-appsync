@@ -50,6 +50,7 @@ class NavWrapper extends React.Component{
     return <UserActionTab screenProps={{
       authenticate: this.authenticate
     }} />
+    // return <Navigator />
   }
 }
 
