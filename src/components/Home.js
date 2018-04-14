@@ -2,34 +2,37 @@ import React from 'react'
 import {
   View, Text, StyleSheet, Button
 } from 'react-native'
+import { Fab, Icon } from 'native-base'
 import { Auth } from 'aws-amplify'
 
 import ShopList from './shop/ShopList'
 
+import { CustomStyles, ColorPalette } from '../styles'
+
 class Home extends React.Component{
-  signIn = () => {
-    this.props.navigation.navigate("Login")
+  goToUpsertShop = () => {
+    this.props.navigation.navigate("UpsertShop")
   }
 
   render() {
     return (
       <View style={styles.container}>
-        {/* <Text style={{textAlign:'center'}}>Hello {Auth.user.username}!</Text> */}
-        {/* <Text style={{textAlign:'center'}}>Hello!</Text> */}
-        <ShopList />
-        {/* <Button
-          title="Sign In"
-          onPress={this.signIn}
-        /> */}
+        <ShopList {...this.props} />
+        <Fab
+          style={styles.addBtn}
+          onPress={this.goToUpsertShop}
+        >
+          <Icon name="add" type="MaterialIcons" />
+        </Fab>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    justifyContent: 'center'
+  container: CustomStyles.spaceBetweenCont,
+  addBtn: {
+    backgroundColor: ColorPalette.violet
   }
 })
 

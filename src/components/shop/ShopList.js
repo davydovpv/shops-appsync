@@ -5,11 +5,24 @@ import {
 import { List, ListItem, Body, Right, Icon } from 'native-base'
 import { graphql } from 'react-apollo'
 import ListShops from '../../queries/ListShops'
+import NewShopSubscription from '../../subscriptions/NewShopSubscription'
+
+import { CustomStyles } from '../../styles/'
 
 class ShopList extends React.Component{
+  componentDidMount() {
+    // this.props.subscribeToNewShops()
+  }
 
   goToShop = (item) => {
-    console.log("item", item)
+    return () => {
+      let payload = {
+        id: item.id,
+        name: item.name,
+        description: item.description
+      }
+      this.props.navigation.navigate("Shop", payload)
+    }
   }
 
   renderShops = ({item}) => {
@@ -26,9 +39,8 @@ class ShopList extends React.Component{
   }
 
   render() {
-    console.log("props: ", this.props)
     return (
-      <View>
+      <View style={CustomStyles.paddedCont}>
         <List>
           <FlatList
             data={this.props.shops}
@@ -46,6 +58,22 @@ export default graphql(ListShops, {
     fetchPolicy: 'cache-and-network'
   },
   props: props => ({
-    shops: props.data.listShops?props.data.listShops.items:[]
+    shops: props.data.listShops?props.data.listShops.items:[],
+    subscribeToNewShops: params => { //listen for new updates
+      props.data.subscribeToMore({
+        document: NewShopSubscription,
+        updateQuery: (prev, { subscriptionData: {data: { onCreateShop }} }) => {
+          return {
+            ...prev, //return previous values
+            listShops: {
+              __typeName: 'ShopConnection',
+              items: [onCreateShop, _.filter(...prev.listShops.items, (shop) => {
+                shop.id !== onCreateShop.id
+              })]
+            }
+          }
+        }
+      })
+    }
   })
 })(ShopList)

@@ -5,6 +5,8 @@ import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import Home from '../src/components/Home'
 import Login from '../src/components/user/Login'
 import Register from '../src/components/user/Register'
+import UpsertShop from '../src/components/shop/UpsertShop'
+import Shop from '../src/components/shop/Shop'
 
 const UserActionTab = TabNavigator({
   Login: {
@@ -26,6 +28,12 @@ const UserActionTab = TabNavigator({
 const Navigator = StackNavigator({
   Home: {
     screen: Home
+  },
+  UpsertShop: {
+    screen: UpsertShop
+  },
+  Shop: {
+    screen: Shop
   }
 })
 
@@ -47,10 +55,10 @@ class NavWrapper extends React.Component{
     // return <Navigator screenProps={{user}} />
     if(this.state.isAuthenticated) return <Navigator />
 
-    return <UserActionTab screenProps={{
-      authenticate: this.authenticate
-    }} />
-    // return <Navigator />
+    // return <UserActionTab screenProps={{
+    //   authenticate: this.authenticate
+    // }} />
+    return <Navigator />
   }
 }
 
